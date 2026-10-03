@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>JoyTime 点餐 | Commande</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f7;color:#222;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Arial,sans-serif;padding-bottom:82px}
+button{font:inherit}header{position:sticky;top:0;z-index:20;background:#fff;box-shadow:0 1px 8px #00000010}
+.top{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px}.brand{font-weight:800;font-size:21px;letter-spacing:.2px}.lang{display:flex;background:#f0f1f3;border-radius:18px;padding:3px}.lang button{border:0;background:transparent;padding:6px 11px;border-radius:15px;font-size:12px}.lang .on{background:#222;color:#fff}
+.notice{background:#fff7e6;color:#725815;font-size:12px;padding:8px 14px}.cats{display:flex;overflow:auto;white-space:nowrap;scrollbar-width:none;border-top:1px solid #f2f2f2}.cats::-webkit-scrollbar{display:none}.cat{border:0;background:#fff;padding:13px 17px;color:#777;position:relative}.cat.on{font-weight:800;color:#111}.cat.on:after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:24px;height:3px;border-radius:3px;background:#ff5a36}
+main{padding:10px}.section-title{font-size:20px;font-weight:800;margin:8px 4px 12px}.section-sub{font-size:12px;color:#888;margin:-7px 4px 12px}.card{background:#fff;border-radius:13px;padding:12px;margin-bottom:10px;display:flex;gap:12px;min-height:112px}.pic{width:92px;height:92px;flex:none;border-radius:11px;background:linear-gradient(135deg,#fff0d7,#f3f4f6);display:flex;align-items:center;justify-content:center;font-size:43px;overflow:hidden}.info{flex:1;display:flex;flex-direction:column}.name{font-weight:750;font-size:16px;line-height:1.35}.fr{font-size:12px;color:#777;margin-top:2px;line-height:1.35}.desc{font-size:12px;color:#888;margin-top:5px;line-height:1.4}.bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between}.price{font-weight:800;font-size:18px}.add{width:31px;height:31px;border:0;border-radius:50%;background:#ff5a36;color:#fff;font-size:23px;line-height:31px}.qty{display:flex;align-items:center;gap:9px}.qbtn{width:29px;height:29px;border-radius:50%;border:1px solid #ddd;background:#fff}.qbtn.plus{border:0;background:#ff5a36;color:#fff;font-size:20px}.qn{min-width:16px;text-align:center}
+.cartbar{position:fixed;z-index:50;left:10px;right:10px;bottom:10px;height:58px;border-radius:30px;background:#222;color:#fff;display:flex;align-items:center;padding:0 8px 0 15px;box-shadow:0 5px 22px #0003}.bag{font-size:23px;margin-right:8px}.count{background:#ff5a36;border-radius:12px;min-width:21px;height:21px;padding:0 6px;font-size:11px;display:flex;align-items:center;justify-content:center}.sum{font-size:17px;font-weight:800;margin-left:9px}.cartgo{margin-left:auto;border:0;border-radius:22px;background:#ff5a36;color:#fff;height:43px;padding:0 17px;font-weight:750}
+.overlay{position:fixed;inset:0;background:#0006;z-index:100;display:none}.overlay.show{display:block}.sheet{position:absolute;left:0;right:0;bottom:0;max-height:90vh;overflow:auto;background:#fff;border-radius:20px 20px 0 0;padding-bottom:20px}.sheethead{padding:16px 18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}.sheethead b{font-size:18px}.x{border:0;width:31px;height:31px;border-radius:50%;background:#f1f2f3}.body{padding:14px 18px}.opt-title{font-weight:750;margin:15px 0 8px}.hint{font-size:12px;color:#888;margin:-4px 0 8px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choice{border:1px solid #ddd;background:#fff;border-radius:9px;padding:9px 10px;font-size:13px}.choice.sel{border-color:#ff5a36;color:#ff5a36;background:#fff5f1}.choice.disabled{opacity:.45}.custom-total{margin:18px 0 10px;display:flex;justify-content:space-between;font-weight:800;font-size:18px}.confirm{width:100%;height:47px;border:0;border-radius:24px;background:#ff5a36;color:#fff;font-weight:800}
+.cartitem{padding:12px 0;border-bottom:1px solid #eee}.ctop{display:flex;justify-content:space-between;gap:8px}.cname{font-weight:700}.opts{font-size:12px;color:#888;margin-top:4px;line-height:1.45}.cqty{display:flex;align-items:center;gap:8px;margin-top:8px}.cqty .qbtn{width:27px;height:27px}.formlabel{font-weight:750;margin:16px 0 8px}.pickup{display:flex;gap:8px}.pick{flex:1;border:1px solid #ddd;background:#fff;border-radius:9px;padding:10px 4px}.pick.sel{border-color:#ff5a36;color:#ff5a36;background:#fff5f1}textarea{width:100%;height:76px;border:1px solid #ddd;border-radius:10px;padding:10px;resize:none;font-family:inherit}.submit{width:calc(100% - 36px);margin:0 18px;height:48px;border:0;border-radius:24px;background:#ff5a36;color:#fff;font-weight:800;font-size:16px}
+.success{position:fixed;inset:0;background:#fff;z-index:200;display:none;padding:35px 20px;overflow:auto}.success.show{display:block}.ok{font-size:58px;text-align:center;margin:20px}.success h2{text-align:center}.success p{text-align:center;color:#777}.receipt{background:#f7f7f7;border-radius:12px;padding:15px;margin-top:22px}.back{width:100%;height:46px;margin-top:18px;border:0;border-radius:23px;background:#222;color:#fff}
+.smallnote{font-size:11px;color:#999;line-height:1.45;margin-top:9px}
+@media(min-width:700px){body{max-width:600px;margin:auto;box-shadow:0 0 30px #00000012;min-height:100vh}.cartbar{max-width:580px;left:50%;right:auto;width:580px;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><div class="brand">JoyTime</div><div class="lang"><button id="zh" class="on" onclick="setLang('zh')">中文</button><button id="fr" onclick="setLang('fr')">Français</button></div></div>
+  <div class="notice" id="notice">扫码点餐 · 到店取餐 · 无需在线支付</div>
+  <div class="cats" id="cats"></div>
+</header>
+<main id="menu"></main>
+
+<div class="cartbar" onclick="openCart()"><span class="bag">🛒</span><span class="count" id="count">0</span><span class="sum">€<span id="sum">0.00</span></span><button class="cartgo" onclick="event.stopPropagation();openCart()">查看购物车</button></div>
+
+<div class="overlay" id="customOverlay">
+ <div class="sheet"><div class="sheethead"><b id="customTitle"></b><button class="x" onclick="closeCustom()">✕</button></div><div class="body" id="customBody"></div></div>
+</div>
+
+<div class="overlay" id="cartOverlay">
+ <div class="sheet"><div class="sheethead"><b id="cartTitle">购物车</b><button class="x" onclick="closeCart()">✕</button></div>
+ <div class="body" id="cartBody"></div>
+ <div class="body"><div class="formlabel" id="pickupLabel">取餐方式</div><div class="pickup"><button class="pick sel" data-pick="now" onclick="pick(this)">马上取</button><button class="pick" data-pick="later" onclick="pick(this)">稍后取</button></div>
+ <div class="formlabel" id="noteLabel">备注</div><textarea id="note" placeholder="例如：少冰、不要香菜……"></textarea></div>
+ <button class="submit" onclick="submitOrder()">提交订单</button></div>
+</div>
+
+<div class="success" id="success"><div class="ok">✅</div><h2 id="successTitle">订单已提交</h2><p id="successSub">请按店内方式取餐。此页面没有在线支付。</p><div class="receipt" id="receipt"></div><button class="back" onclick="backMenu()">返回菜单</button></div>
+
+<script>
+const cats=[
+ {id:'poke',zh:'夏威夷饭',fr:'Poké'},
+ {id:'tea',zh:'奶茶 / 茶饮',fr:'Thé & Bubble Tea'},
+ {id:'waffle',zh:'鸡蛋仔',fr:'Waffle aux œufs'},
+ {id:'coffee',zh:'咖啡',fr:'Cafés'}
+];
+
+const products=[
+ {id:'p1',cat:'poke',emoji:'🥗',zh:'三文鱼 Poké',fr:'Poké saumon',descZh:'牛油果、芒果、黄瓜、胡萝卜、番茄',descFr:'Avocat, mangue, concombre, carottes, tomates',priceM:9.9,priceL:11.9,type:'poke'},
+ {id:'p2',cat:'poke',emoji:'🥗',zh:'鸡肉 Poké',fr:'Poké poulet',descZh:'牛油果、芒果、黄瓜、胡萝卜、番茄',descFr:'Avocat, mangue, concombre, carottes, tomates',priceM:9.9,priceL:11.9,type:'poke'},
+ {id:'p3',cat:'poke',emoji:'🥗',zh:'豆腐 Poké',fr:'Poké tofu',descZh:'牛油果、芒果、黄瓜、胡萝卜、番茄',descFr:'Avocat, mangue, concombre, carottes, tomates',priceM:9.9,priceL:11.9,type:'poke'},
+ {id:'pf1',cat:'poke',emoji:'🥗',zh:'经典 Poké 套餐',fr:'Formule classique',descZh:'M Poké + M 奶茶',descFr:'Poké M + Bubble Tea M',price:12.9,type:'simple'},
+ {id:'pf2',cat:'poke',emoji:'🥗',zh:'豪华 Poké 套餐',fr:'Formule gourmande',descZh:'L Poké + M 奶茶',descFr:'Poké L + Bubble Tea M',price:14.9,type:'simple'},
+
+ {id:'t1',cat:'tea',emoji:'🧋',zh:'红茶奶茶',fr:'Thé noir au lait',descZh:'M €4.90 / L €5.90',descFr:'M 4,90€ / L 5,90€',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t2',cat:'tea',emoji:'🧋',zh:'绿茶奶茶',fr:'Thé vert au lait',descZh:'经典绿茶风味',descFr:'Saveur thé vert',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t3',cat:'tea',emoji:'🧋',zh:'红茶芋香 / Taro',fr:'Thé noir taro',descZh:'M €4.90 / L €5.90',descFr:'M 4,90€ / L 5,90€',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t4',cat:'tea',emoji:'🧋',zh:'抹茶奶茶',fr:'Latte matcha',descZh:'M €4.90 / L €5.90',descFr:'M 4,90€ / L 5,90€',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t5',cat:'tea',emoji:'🍑',zh:'绿茶桃子',fr:'Thé vert pêche',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t6',cat:'tea',emoji:'🍓',zh:'绿茶草莓',fr:'Thé vert fraise',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t7',cat:'tea',emoji:'🥭',zh:'绿茶芒果',fr:'Thé vert mangue',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t8',cat:'tea',emoji:'🍒',zh:'绿茶荔枝',fr:'Thé vert litchi',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t9',cat:'tea',emoji:'🍋',zh:'绿茶柠檬',fr:'Thé vert citron',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t10',cat:'tea',emoji:'🍎',zh:'绿茶苹果',fr:'Thé vert pomme',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t11',cat:'tea',emoji:'🥭',zh:'绿茶百香果',fr:'Thé vert passion',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t12',cat:'tea',emoji:'🌺',zh:'红茶洛神',fr:'Thé noir hibiscus',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t13',cat:'tea',emoji:'🍉',zh:'绿茶西瓜',fr:'Thé vert pastèque',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t14',cat:'tea',emoji:'🥝',zh:'绿茶奇异果',fr:'Thé vert kiwi',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t15',cat:'tea',emoji:'🍍',zh:'绿茶菠萝',fr:'Thé vert ananas',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t16',cat:'tea',emoji:'🫐',zh:'黑茶蓝莓',fr:'Thé noir myrtille',descZh:'水果茶',descFr:'Thé fruité',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t17',cat:'tea',emoji:'🍋',zh:'柠檬饮',fr:'Citron',descZh:'魔法饮品',descFr:'Boisson magique',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t18',cat:'tea',emoji:'🍓',zh:'草莓饮',fr:'Fraise',descZh:'魔法饮品',descFr:'Boisson magique',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t19',cat:'tea',emoji:'🍎',zh:'苹果饮',fr:'Pomme',descZh:'魔法饮品',descFr:'Boisson magique',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t20',cat:'tea',emoji:'🌺',zh:'洛神饮',fr:'Hibiscus',descZh:'魔法饮品',descFr:'Boisson magique',priceM:4.9,priceL:5.9,type:'tea'},
+ {id:'t21',cat:'tea',emoji:'☕',zh:'咖啡',fr:'Café',descZh:'',descFr:'',price:1.7,type:'simple'},
+ {id:'t22',cat:'tea',emoji:'☕',zh:'咖啡牛奶',fr:'Café au lait',descZh:'M €4.90',descFr:'M 4,90€',price:4.9,type:'simple'},
+ {id:'t23',cat:'tea',emoji:'☕',zh:'越南咖啡',fr:'Café vietnamien',descZh:'M €4.90',descFr:'M 4,90€',price:4.9,type:'simple'},
+
+ {id:'w1',cat:'waffle',emoji:'🧇',zh:'原味鸡蛋仔',fr:'Waffle nature',descZh:'酱汁和鲜奶油包含',descFr:'Coulis et chantilly inclus',price:4.5,type:'waffle'},
+ {id:'w2',cat:'waffle',emoji:'🧇',zh:'鸡蛋仔 + 1 Topping',fr:'Waffle + 1 topping',descZh:'可选择 1 种 Topping',descFr:'1 topping au choix',price:5.9,type:'waffle'},
+ {id:'w3',cat:'waffle',emoji:'🧇',zh:'鸡蛋仔 + 1 冰淇淋球',fr:'Waffle + 1 glace',descZh:'可选择 1 球冰淇淋',descFr:'1 boule de glace',price:6.9,type:'waffle'},
+ {id:'w4',cat:'waffle',emoji:'🧇',zh:'鸡蛋仔 + 冰淇淋 + 1 Topping',fr:'Waffle + 1 glace + 1 topping',descZh:'冰淇淋和 1 种 Topping',descFr:'Glace + 1 topping',price:7.9,type:'waffle'},
+ {id:'wf',cat:'waffle',emoji:'🧇',zh:'Waffle 套餐',fr:'Formule waffle',descZh:'1 球冰淇淋 + 1 Topping + M Bubble Tea',descFr:'1 glace + 1 topping + Bubble Tea M',price:10.9,type:'simple'},
+
+ {id:'c1',cat:'coffee',emoji:'☕',zh:'咖啡',fr:'Café',descZh:'',descFr:'',price:1.7,type:'simple'},
+ {id:'c2',cat:'coffee',emoji:'☕',zh:'咖啡牛奶',fr:'Café au lait',descZh:'M €4.90',descFr:'M 4,90€',price:4.9,type:'simple'},
+ {id:'c3',cat:'coffee',emoji:'☕',zh:'越南咖啡',fr:'Café vietnamien',descZh:'M €4.90',descFr:'M 4,90€',price:4.9,type:'simple'}
+];
+
+const toppingsW=[
+ ['nutella','Nutella','Nutella'],['oreo','Oreo','Oreo'],['mms',"M&M's","M&M's"],['kinder','Kinder Bueno','Kinder Bueno'],
+ ['marsh','棉花糖','Guimauve'],['fraise','草莓','Fraise'],['mangue','芒果','Mangue'],['framboise','覆盆子','Framboise'],
+ ['myrtille','蓝莓','Myrtille'],['banane','香蕉','Banane'],['kiwi','奇异果','Kiwi']
+];
+const ice=[
+ ['vanille','香草','Vanille'],['mangue','芒果','Mangue'],['coco','椰子','Coco'],['caramel','焦糖','Caramel'],
+ ['fraise','草莓','Fraise'],['passion','百香果','Passion'],['chocolat','巧克力','Chocolat'],['citron','柠檬','Citron'],
+ ['noisette','榛子','Noisette'],['peche','桃子','Pêche'],['cafe','咖啡','Café'],['pistache','开心果','Pistache']
+];
+const teaToppings=[
+ ['tapioca','珍珠','Perles de tapioca'],['gelNat','椰果原味','Gelée coco nature'],['gelLitchi','荔枝椰果','Gelée litchi'],
+ ['gelSucre','红糖椰果','Gelée sucre roux'],['gelBonbon','果冻','Gelée bonbon'],['sago','西米','Perles de sago'],
+ ['aloe','芦荟','Aloe vera'],['popFraise','草莓爆爆珠','Popping fraise'],['popMangue','芒果爆爆珠','Popping mangue'],
+ ['popPomme','苹果爆爆珠','Popping pomme'],['popPassion','百香果爆爆珠','Popping passion'],['popLitchi','荔枝爆爆珠','Popping litchi'],
+ ['popMyrtille','蓝莓爆爆珠','Popping myrtille'],['popKiwi','奇异果爆爆珠','Popping kiwi']
+];
+const pokeIngredients=[
+ ['avocat','牛油果','Avocat'],['concombre','黄瓜','Concombre'],['carotte','胡萝卜','Carotte'],['tomate','番茄','Tomate'],
+ ['mangue','芒果','Mangue'],['wakame','裙带菜','Algue wakamé'],['edamame','毛豆','Edamame'],['radis','萝卜','Radis'],['season','时令水果','Fruits de saison']
+];
+const pokeSauces=[
+ ['sojaSuc','甜酱油','Soja sucrée'],['sojaSale','咸酱油','Soja salée'],['sesame','芝麻酱','Sésame'],['sriracha','Sriracha','Sriracha']
+];
+
+let lang='zh',cat='poke',cart=[],pickMode='now',editing=null,form={};
+
+const $=id=>document.getElementById(id);
+function tr(a,b){return lang==='zh'?a:b}
+function setLang(l){lang=l;$('zh').classList.toggle('on',l==='zh');$('fr').classList.toggle('on',l==='fr');render()}
+function render(){
+ $('notice').textContent=tr('扫码点餐 · 到店取餐 · 无需在线支付','Commandez par QR code · À emporter · Aucun paiement en ligne');
+ $('cartTitle').textContent=tr('购物车','Panier');$('pickupLabel').textContent=tr('取餐方式','Mode de retrait');$('noteLabel').textContent=tr('备注','Remarque');
+ $('note').placeholder=tr('例如：少冰、不要香菜……','Ex. : moins de glaçons, sans coriandre…');
+ document.querySelector('.cartgo').textContent=tr('查看购物车','Voir le panier');
+ document.querySelector('.submit').textContent=tr('提交订单','Passer la commande');
+ $('cats').innerHTML=cats.map(c=>`<button class="cat ${cat===c.id?'on':''}" onclick="cat='${c.id}';render()">${tr(c.zh,c.fr)}</button>`).join('');
+ const list=products.filter(p=>p.cat===cat);
+ $('menu').innerHTML=`<div class="section-title">${tr(cats.find(c=>c.id===cat).zh,cats.find(c=>c.id===cat).fr)}</div>
+ ${cat==='poke'?`<div class="section-sub">${tr('M €9.90 / L €11.90 · 5 种食材包含，额外每种 +€1','M 9,90€ / L 11,90€ · 5 ingrédients inclus, +1€ par ingrédient supplémentaire')}</div>`:''}
+ ${cat==='tea'?`<div class="section-sub">${tr('M €4.90 / L €5.90 · Toppings：第一种免费，第二种起每种 +€0.50','M 4,90€ / L 5,90€ · Toppings : le 1er est inclus, puis +0,50€ par topping')}</div>`:''}
+ ${list.map(card).join('')}`;
+ updateCartBar();
+}
+function card(p){
+ const q=cart.filter(x=>x.id===p.id).reduce((s,x)=>s+x.qty,0);
+ const price=p.price??p.priceM;
+ return `<div class="card"><div class="pic">${p.emoji}</div><div class="info"><div class="name">${tr(p.zh,p.fr)}</div><div class="fr">${tr(p.fr,p.zh)}</div><div class="desc">${tr(p.descZh,p.descFr)}</div><div class="bottom"><span class="price">€${price.toFixed(2)}${p.priceM?'+':''}</span>${q?`<div class="qty"><button class="qbtn" onclick="quick('${p.id}',-1)">−</button><span class="qn">${q}</span><button class="qbtn plus" onclick="quick('${p.id}',1)">+</button></div>`:`<button class="add" onclick="openCustom('${p.id}')">+</button>`}</div></div></div>`;
+}
+function quick(id,d){
+ const p=products.find(x=>x.id===id);
+ if(d<0){let i=cart.findIndex(x=>x.id===id);if(i>=0){cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1)}} else if(p.type==='simple'){addItem({id:p.id,name:tr(p.zh,p.fr),price:p.price,opts:[]})} else openCustom(id);
+ render();
+}
+function updateCartBar(){const n=cart.reduce((s,x)=>s+x.qty,0),t=cart.reduce((s,x)=>s+x.price*x.qty,0);$('count').textContent=n;$('sum').textContent=t.toFixed(2)}
+function addItem(x){const same=cart.find(i=>i.key===x.key);if(same)same.qty++;else cart.push({...x,key:x.key||x.id,qty:1})}
+function openCustom(id){
+ const p=products.find(x=>x.id===id);editing=p;form={size:'M',toppings:[],ice:[],ingredients:[],sauces:[],sugar:'normal',basePrice:p.priceM??p.price};
+ $('customTitle').textContent=tr(p.zh,p.fr);$('customOverlay').classList.add('show');drawCustom();
+}
+function closeCustom(){$('customOverlay').classList.remove('show')}
+function toggle(arr,key,max=99){const i=form[arr].indexOf(key);if(i>=0)form[arr].splice(i,1);else if(form[arr].length<max)form[arr].push(key);drawCustom()}
+function single(k,v){form[k]=v;drawCustom()}
+function choice(arr,data,max){
+ return data.map(x=>`<button class="choice ${form[arr].includes(x[0])?'sel':''}" onclick="toggle('${arr}','${x[0]}',${max})">${lang==='zh'?x[1]:x[2]}</button>`).join('')
+}
+function drawCustom(){
+ const p=editing;let h='';
+ if(p.type==='tea'){
+  h+=`<div class="opt-title">${tr('杯型','Taille')}</div><div class="choices"><button class="choice ${form.size==='M'?'sel':''}" onclick="single('size','M')">M · €4.90</button><button class="choice ${form.size==='L'?'sel':''}" onclick="single('size','L')">L · €5.90</button></div>`;
+  h+=`<div class="opt-title">${tr('甜度','Sucre')}</div><div class="choices"><button class="choice ${form.sugar==='less'?'sel':''}" onclick="single('sugar','less')">${tr('少糖','Peu sucré')}</button><button class="choice ${form.sugar==='normal'?'sel':''}" onclick="single('sugar','normal')">${tr('普通','Normal')}</button><button class="choice ${form.sugar==='more'?'sel':''}" onclick="single('sugar','more')">${tr('多糖','Très sucré')}</button></div>`;
+  h+=`<div class="opt-title">${tr('Toppings','Toppings')}</div><div class="hint">${tr('第一种免费；第二种起每种 +€0.50；可选“不要 Toppings”','1er topping inclus ; puis +0,50€ chacun. Vous pouvez choisir “Sans toppings”.')}</div><div class="choices"><button class="choice ${form.toppings.length===0?'sel':''}" onclick="form.toppings=[];drawCustom()">${tr('不要 Toppings','Sans toppings')}</button>${choice('toppings',teaToppings,99)}</div>`;
+  form.basePrice=form.size==='M'?p.priceM:p.priceL;
+ }
+ if(p.type==='poke'){
+  h+=`<div class="opt-title">${tr('尺寸','Taille')}</div><div class="choices"><button class="choice ${form.size==='M'?'sel':''}" onclick="single('size','M')">M · €9.90</button><button class="choice ${form.size==='L'?'sel':''}" onclick="single('size','L')">L · €11.90</button></div>`;
+  h+=`<div class="opt-title">${tr('蛋白质','Protéine')}</div><div class="hint">${tr('1 种包含；额外每种 +€2','1 protéine incluse ; +2€ par protéine supplémentaire')}</div><div class="choices">${[['salmon','三文鱼','Saumon'],['chicken','鸡肉','Poulet'],['tofu','豆腐','Tofu']].map(x=>`<button class="choice ${form.protein===x[0]?'sel':''}" onclick="single('protein','${x[0]}')">${lang==='zh'?x[1]:x[2]}</button>`).join('')}</div>`;
+  h+=`<div class="opt-title">${tr('食材','Ingrédients')}</div><div class="hint">${tr('5 种包含；第 6 种起每种 +€1','5 ingrédients inclus ; +1€ par ingrédient supplémentaire')}</div><div class="choices">${choice('ingredients',pokeIngredients,99)}</div>`;
+  h+=`<div class="opt-title">${tr('Toppings','Toppings')}</div><div class="choices"><button class="choice ${form.toppings.length===0?'sel':''}" onclick="form.toppings=[];drawCustom()">${tr('不要 Toppings','Sans toppings')}</button>${[['fried','炸洋葱','Oignons frits'],['whiteSesame','白芝麻','Sésame blanc'],['blackSesame','黑芝麻','Sésame noir']].map(x=>`<button class="choice ${form.toppings.includes(x[0])?'sel':''}" onclick="toggle('toppings','${x[0]}')">${lang==='zh'?x[1]:x[2]}</button>`).join('')}</div>`;
+  h+=`<div class="opt-title">${tr('Sauce','Sauce')}</div><div class="hint">${tr('第一种免费；第二种起每种 +€0.50','1ère sauce incluse ; puis +0,50€ chacune')}</div><div class="choices"><button class="choice ${form.sauces.length===0?'sel':''}" onclick="form.sauces=[];drawCustom()">${tr('不要 Sauce','Sans sauce')}</button>${choice('sauces',pokeSauces,99)}</div>`;
+  form.basePrice=form.size==='M'?9.9:11.9;
+ }
+ if(p.type==='waffle'){
+  h+=`<div class="opt-title">${tr('Toppings','Toppings')}</div><div class="hint">${tr('套餐已包含的第一个 Topping 免费；额外 Topping 每种 +€1','Le premier topping inclus est gratuit ; +1€ par topping supplémentaire')}</div><div class="choices"><button class="choice ${form.toppings.length===0?'sel':''}" onclick="form.toppings=[];drawCustom()">${tr('不要 Toppings','Sans topping')}</button>${choice('toppings',toppingsW,99)}</div>`;
+  h+=`<div class="opt-title">${tr('冰淇淋','Glace')}</div><div class="hint">${tr('额外每球 +€2','+2€ par boule supplémentaire')}</div><div class="choices">${choice('ice',ice,99)}</div>`;
+  form.basePrice=p.price;
+ }
+ let extra=0;
+ if(p.type==='tea')extra=Math.max(0,form.toppings.length-1)*.5;
+ if(p.type==='poke')extra=Math.max(0,form.ingredients.length-5)*1+Math.max(0,form.protein&&form.proteinExtra?form.proteinExtra:0)*2+Math.max(0,form.toppings.length-1)*.5+Math.max(0,form.sauces.length-1)*.5;
+ if(p.type==='waffle')extra=Math.max(0,form.toppings.length-1)*1+Math.max(0,form.ice.length-1)*2;
+ const total=form.basePrice+extra;
+ h+=`<div class="custom-total"><span>${tr('价格','Prix')}</span><span>€${total.toFixed(2)}</span></div><button class="confirm" onclick="confirmCustom()">${tr('加入购物车','Ajouter au panier')}</button>`;
+ $('customBody').innerHTML=h;
+}
+function confirmCustom(){
+ const p=editing;
+ if(p.type==='poke'&&!form.protein){alert(tr('请选择一种蛋白质','Veuillez choisir une protéine'));return}
+ if(p.type==='poke'&&form.ingredients.length>0&&form.ingredients.length<0)return;
+ let extra=0;
+ if(p.type==='tea')extra=Math.max(0,form.toppings.length-1)*.5;
+ if(p.type==='poke')extra=Math.max(0,form.ingredients.length-5)+Math.max(0,form.toppings.length-1)*.5+Math.max(0,form.sauces.length-1)*.5;
+ if(p.type==='waffle')extra=Math.max(0,form.toppings.length-1)+Math.max(0,form.ice.length-1)*2;
+ let price=form.basePrice+extra;
+ let opts=[];
+ if(form.size)opts.push(form.size);
+ if(p.type==='tea'){opts.push(form.sugar);if(form.toppings.length)opts.push((lang==='zh'?'Toppings: ':'Toppings: ')+form.toppings.join(', '))}
+ if(p.type==='poke'){opts.push((lang==='zh'?'蛋白质: ':'Protéine: ')+form.protein);if(form.ingredients.length)opts.push((lang==='zh'?'食材: ':'Ingrédients: ')+form.ingredients.join(', '));if(form.sauces.length)opts.push((lang==='zh'?'Sauce: ':'Sauce: ')+form.sauces.join(', '))}
+ if(p.type==='waffle'){if(form.toppings.length)opts.push('Topping: '+form.toppings.join(', '));if(form.ice.length)opts.push('Glace: '+form.ice.join(', '))}
+ addItem({id:p.id,name:tr(p.zh,p.fr),price,opts,key:p.id+'|'+JSON.stringify(form)});
+ closeCustom();render();
+}
+function openCart(){renderCart();$('cartOverlay').classList.add('show')}function closeCart(){$('cartOverlay').classList.remove('show')}
+function renderCart(){
+ let h='';
+ if(!cart.length)h=`<div class="smallnote" style="text-align:center;padding:35px">${tr('购物车还是空的','Votre panier est vide')}</div>`;
+ else cart.forEach((x,i)=>{h+=`<div class="cartitem"><div class="ctop"><span class="cname">${x.name}</span><b>€${(x.price*x.qty).toFixed(2)}</b></div>${x.opts.length?`<div class="opts">${x.opts.join(' · ')}</div>`:''}<div class="cqty"><button class="qbtn" onclick="cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);renderCart();render()">−</button><span>${x.qty}</span><button class="qbtn plus" onclick="cart[i].qty++;renderCart();render()">+</button></div></div>`});
+ $('cartBody').innerHTML=h;
+}
+function pick(b){document.querySelectorAll('.pick').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');pickMode=b.dataset.pick}
+function submitOrder(){
+ if(!cart.length){alert(tr('请先选择商品','Veuillez choisir un article'));return}
+ let total=cart.reduce((s,x)=>s+x.price*x.qty,0),note=$('note').value.trim();
+ let h=`<h3>${tr('订单内容','Détails de la commande')}</h3><br>`;
+ cart.forEach(x=>h+=`<div style="display:flex;justify-content:space-between;margin:7px 0;gap:8px"><span>${x.name} × ${x.qty}</span><b>€${(x.price*x.qty).toFixed(2)}</b></div>`);
+ h+=`<hr style="border:0;border-top:1px solid #ddd"><div style="display:flex;justify-content:space-between;font-weight:800"><span>${tr('合计','Total')}</span><span>€${total.toFixed(2)}</span></div>`;
+ h+=`<p>${tr('取餐：','Retrait : ')}${pickMode==='now'?tr('马上取','Dès maintenant'):tr('稍后取','Plus tard')}</p>`;
+ if(note)h+=`<p>${tr('备注：','Remarque : ')}${escapeHtml(note)}</p>`;
+ $('receipt').innerHTML=h;$('cartOverlay').classList.remove('show');$('success').classList.add('show');
+}
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function backMenu(){$('success').classList.remove('show');cart=[];$('note').value='';render()}
+render();
+</script>
+</body>
+</html>
